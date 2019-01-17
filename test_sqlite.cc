@@ -2,7 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <cctype>
+#include <cwctype>
+#include <codecvt>
+#include <locale>
 #include <cassert>
 #include <algorithm>
 
@@ -13,11 +15,13 @@ int main(...) {
 
     {{
         sqlite::statement && s = db.prepare("INSERT INTO words VALUES(@w,@s)");
-        std::string w;
         std::ifstream f("/usr/share/dict/words");
         while (f) try {
-            f >> w;
-            std::transform(w.begin(), w.end(), w.begin(), tolower);
+            std::string t;
+            f >> t;
+            std::wstring_convert<std::codecvt_utf8<wchar_t> > wc;
+            std::wstring w = wc.from_bytes(t);
+            std::transform(w.begin(), w.end(), w.begin(), towlower);
             s.bind(1, w);
             std::sort(w.begin(), w.end());
             s.bind(2, w);

@@ -36,6 +36,9 @@ public:
         statement & bind(int, const char *);
         statement & bind(int, const char *, ::size_t);
         statement & bind(int, const std::string &);
+        statement & bind(int, const wchar_t *);
+        statement & bind(int, const wchar_t *, ::size_t);
+        statement & bind(int, const std::wstring &);
         statement & bind(int, const void *, ::size_t);
         statement & bind(int, const std::vector<uint8_t> &);
 
@@ -45,6 +48,9 @@ public:
         statement & bind(const char *, const char *);
         statement & bind(const char *, const char *, ::size_t);
         statement & bind(const char *, const std::string &);
+        statement & bind(const char *, const wchar_t *);
+        statement & bind(const char *, const wchar_t *, ::size_t);
+        statement & bind(const char *, const std::wstring &);
         statement & bind(const char *, const void *, ::size_t);
         statement & bind(const char *, const std::vector<uint8_t> &);
 
@@ -55,6 +61,7 @@ public:
         double d(int);
 
         std::string text(int);
+        std::wstring wtext(int);
         std::vector<uint8_t> blob(int);
 
     private:

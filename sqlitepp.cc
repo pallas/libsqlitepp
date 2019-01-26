@@ -12,18 +12,15 @@
 
 namespace {
 
-class global : public lace::singleton<global> {
-public:
-    global() { sqlite3_initialize(); }
-    ~global() { sqlite3_shutdown(); }
+static void sqlitepp_constructor() __attribute__((constructor));
+void sqlitepp_constructor() { sqlite3_initialize(); }
 
-    friend class lace::singleton<global>;
-};
+static void sqlitepp_destructor() __attribute__((destructor));
+void sqlitepp_destructor() { sqlite3_shutdown(); }
 
 }
 
 sqlite::sqlite(const char * f) : _(NULL) {
-    global::instance();
     TRY(sqlite3_open_v2, f, &_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
 }
 

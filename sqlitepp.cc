@@ -54,7 +54,11 @@ sqlite::statement sqlite::prepare(const std::string & s) { return { _, s.data(),
 bool sqlite::autocommit() { return sqlite3_get_autocommit(_); }
 
 sqlite::statement::statement(struct sqlite3 *db, const char *s, int l) {
+#if SQLITE_VERSION_NUMBER >= 3020000
     if (sqlite3_prepare_v3(db, s, l, SQLITE_PREPARE_PERSISTENT, &_, NULL))
+#else
+    if (sqlite3_prepare_v2(db, s, l, &_, NULL))
+#endif
         throw error(sqlite3_errmsg(db));
 }
 

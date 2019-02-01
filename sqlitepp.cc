@@ -60,10 +60,10 @@ sqlite::statement::statement(struct sqlite3 *db, const char *s, int l) {
 
 sqlite::statement::~statement() { sqlite3_finalize(_); }
 
-unsigned sqlite::statement::parameters() { return sqlite3_bind_parameter_count(_); }
-int sqlite::statement::index(const char *s) { return sqlite3_bind_parameter_index(_, s); }
+unsigned sqlite::statement::parameters() const { return sqlite3_bind_parameter_count(_); }
+int sqlite::statement::index(const char *s) const { return sqlite3_bind_parameter_index(_, s); }
 
-unsigned sqlite::statement::columns() { return sqlite3_column_count(_); }
+unsigned sqlite::statement::columns() const { return sqlite3_column_count(_); }
 
 int
 sqlite::statement::execute() {
@@ -173,21 +173,21 @@ sqlite::statement & sqlite::statement::bind(const char * n, const std::wstring &
 sqlite::statement & sqlite::statement::bind(const char * n, const void * p, ::size_t l) { return bind(index(n), p, l); }
 sqlite::statement & sqlite::statement::bind(const char * n, const std::vector<uint8_t> & v) { return bind(index(n), v); }
 
-const char * sqlite::statement::name(int i) { return sqlite3_column_name(_, i); }
+const char * sqlite::statement::name(int i) const { return sqlite3_column_name(_, i); }
 
-bool sqlite::statement::null(int c) { return SQLITE_NULL == sqlite3_column_type(_, c); }
-int64_t sqlite::statement::i(int c) { return sqlite3_column_int64(_, c); }
-double sqlite::statement::d(int c) { return sqlite3_column_double(_, c); }
+bool sqlite::statement::null(int c) const { return SQLITE_NULL == sqlite3_column_type(_, c); }
+int64_t sqlite::statement::i(int c) const { return sqlite3_column_int64(_, c); }
+double sqlite::statement::d(int c) const { return sqlite3_column_double(_, c); }
 
 std::string
-sqlite::statement::text(int c) {
+sqlite::statement::text(int c) const {
     if (const char * s = reinterpret_cast<const char *>(sqlite3_column_text(_, c)))
         return std::string(s, sqlite3_column_bytes(_, c));
     return {};
 }
 
 std::wstring
-sqlite::statement::wtext(int c) {
+sqlite::statement::wtext(int c) const {
     std::wstring_convert<std::codecvt_utf8<wchar_t> > wc;
     if (const char * s = reinterpret_cast<const char *>(sqlite3_column_text(_, c)))
         return wc.from_bytes(s, s + sqlite3_column_bytes(_, c));
@@ -195,7 +195,7 @@ sqlite::statement::wtext(int c) {
 }
 
 std::vector<uint8_t>
-sqlite::statement::blob(int c) {
+sqlite::statement::blob(int c) const {
     std::vector<uint8_t> v;
     if (const uint8_t * s = reinterpret_cast<const uint8_t *>(sqlite3_column_blob(_, c))) {
         int l = sqlite3_column_bytes(_, c);

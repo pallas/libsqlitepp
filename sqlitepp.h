@@ -21,10 +21,10 @@ public:
     public:
         ~statement();
 
-        unsigned parameters();
-        int index(const char *);
+        unsigned parameters() const;
+        int index(const char *) const;
 
-        unsigned columns();
+        unsigned columns() const;
         int execute();
         void reset();
         bool step();
@@ -54,15 +54,15 @@ public:
         statement & bind(const char *, const void *, ::size_t);
         statement & bind(const char *, const std::vector<uint8_t> &);
 
-        const char * name(int);
+        const char * name(int) const;
 
-        bool null(int);
-        int64_t i(int);
-        double d(int);
+        bool null(int) const;
+        int64_t i(int) const;
+        double d(int) const;
 
-        std::string text(int);
-        std::wstring wtext(int);
-        std::vector<uint8_t> blob(int);
+        std::string text(int) const;
+        std::wstring wtext(int) const;
+        std::vector<uint8_t> blob(int) const;
 
     private:
         struct sqlite3_stmt *_;

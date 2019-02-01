@@ -175,7 +175,24 @@ sqlite::statement & sqlite::statement::bind(const char * n, const std::vector<ui
 
 const char * sqlite::statement::name(int i) const { return sqlite3_column_name(_, i); }
 
-bool sqlite::statement::null(int c) const { return SQLITE_NULL == sqlite3_column_type(_, c); }
+sqlite::type::type_t
+sqlite::statement::type(int c) const {
+    switch(sqlite3_column_type(_, c)) {
+        case SQLITE_INTEGER:	return sqlite::type::i;
+        case SQLITE_FLOAT:	return sqlite::type::d;
+        case SQLITE3_TEXT:	return sqlite::type::text;
+        case SQLITE_BLOB:	return sqlite::type::blob;
+        case SQLITE_NULL:	return sqlite::type::null;
+        default: return sqlite::type::unknown;
+    };
+}
+
+bool sqlite::statement::is_i(int c) const	{ return sqlite::type::i == type(c); }
+bool sqlite::statement::is_d(int c) const	{ return sqlite::type::d == type(c); }
+bool sqlite::statement::is_text(int c) const	{ return sqlite::type::text == type(c); }
+bool sqlite::statement::is_blob(int c) const	{ return sqlite::type::blob == type(c); }
+bool sqlite::statement::is_null(int c) const	{ return sqlite::type::null == type(c); }
+
 int64_t sqlite::statement::i(int c) const { return sqlite3_column_int64(_, c); }
 double sqlite::statement::d(int c) const { return sqlite3_column_double(_, c); }
 

@@ -16,6 +16,8 @@ public:
     sqlite(const char * = "");
     ~sqlite();
 
+    struct type { enum type_t { unknown, i, d, text, blob, null }; };
+
     class statement : public lace::do_not_copy {
         statement(struct sqlite3 *, const char *, int);
     public:
@@ -56,7 +58,14 @@ public:
 
         const char * name(int) const;
 
-        bool null(int) const;
+        sqlite::type::type_t type(int) const;
+
+        bool is_null(int) const;
+        bool is_i(int) const;
+        bool is_d(int) const;
+        bool is_text(int) const;
+        bool is_blob(int) const;
+
         int64_t i(int) const;
         double d(int) const;
 

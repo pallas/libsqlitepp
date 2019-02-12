@@ -24,6 +24,10 @@ sqlite::sqlite(const char * f) : _(NULL) {
     TRY(sqlite3_open_v2, f, &_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
 }
 
+sqlite::sqlite(const std::string & f) : _(NULL) {
+    TRY(sqlite3_open_v2, f.c_str(), &_, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+}
+
 sqlite::~sqlite() { sqlite3_close_v2(_); }
 
 int

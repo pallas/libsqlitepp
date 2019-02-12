@@ -14,6 +14,7 @@ struct sqlite3_stmt;
 class sqlite : public lace::do_not_copy {
 public:
     sqlite(const char * = "");
+    sqlite(const std::string &);
     ~sqlite();
 
     struct type { enum type_t { unknown, i, d, text, blob, null }; };
